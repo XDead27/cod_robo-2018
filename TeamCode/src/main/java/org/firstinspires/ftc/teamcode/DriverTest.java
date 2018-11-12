@@ -1,3 +1,4 @@
+//Codul lui Alexandru MICLEA
 package org.firstinspires.ftc.teamcode;
 
 import android.support.annotation.IntRange;
