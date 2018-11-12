@@ -104,7 +104,7 @@ public class DriverTest extends LinearOpMode {
 
         //setare directii
         Motor_Glisiera.setDirection(DcMotorSimple.Direction.FORWARD);
-        Motor_BL.setDirection(DcMotorSimple.Direction.REVERSE);
+        Motor_BL.setDirection(DcMotorSimple.Direction.FORWARD);
         Motor_FL.setDirection(DcMotorSimple.Direction.REVERSE);
         Motor_BR.setDirection(DcMotorSimple.Direction.REVERSE);
         Motor_FR.setDirection(DcMotorSimple.Direction.REVERSE);

@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous
 public class Autonomie_Proto extends AutonomieTest {
-    
+
     @Override
     public void runOpMode() {
         initOp();
