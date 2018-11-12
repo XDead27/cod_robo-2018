@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-public abstract class AutonomieTest extends LinearOpMode {
+public abstract class AutonomieMain extends LinearOpMode {
     //motoare
     protected DcMotor Motor_Glisiera = null;
     protected DcMotor Motor_FL = null;
@@ -52,7 +52,7 @@ public abstract class AutonomieTest extends LinearOpMode {
 
         //setare directii
         Motor_Glisiera.setDirection(DcMotorSimple.Direction.FORWARD);
-        Motor_BL.setDirection(DcMotorSimple.Direction.REVERSE);
+        Motor_BL.setDirection(DcMotorSimple.Direction.FORWARD);
         Motor_FL.setDirection(DcMotorSimple.Direction.REVERSE);
         Motor_BR.setDirection(DcMotorSimple.Direction.REVERSE);
         Motor_FR.setDirection(DcMotorSimple.Direction.REVERSE);

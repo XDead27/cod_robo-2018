@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous
-public class Autonomie_Proto extends AutonomieTest {
+public class Autonomie_Proto extends AutonomieMain {
 
     @Override
     public void runOpMode() {
