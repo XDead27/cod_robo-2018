@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -75,18 +76,12 @@ public class DriverTest extends LinearOpMode {
 
 
             if(gamepad2.left_trigger > deadzone){
-                Motor_Ridicat.setPower(Motor_Ridicat.getCurrentPosition() > -29.432*TICS_PER_CM ? gamepad2.left_trigger/3 : 0);
+                Motor_Ridicat.setPower(gamepad2.left_trigger/3);
             }else if(gamepad2.right_trigger > deadzone){
-                Motor_Ridicat.setPower(Motor_Ridicat.getCurrentPosition() < 0 ? -gamepad2.right_trigger/3 : 0);
+                Motor_Ridicat.setPower(-gamepad2.right_trigger/3);
             }else{
                 Motor_Ridicat.setPower(0);
             }
-
-            telemetry.addData("Left X", gamepad1.left_stick_x);
-            telemetry.addData("Left Y", gamepad1.left_stick_y);
-            telemetry.addData( "Motor_Glisiera: ", Motor_Glisiera.getCurrentPosition());
-            telemetry.addData("Motor Ridicat:", Motor_Ridicat.getCurrentPosition());
-            telemetry.update();
         }
     }
 
@@ -133,8 +128,8 @@ public class DriverTest extends LinearOpMode {
     //calculeaza puterile rotilor in functie de stick si apoi aplica rotilor puterea
     private void calculateWheelsPower ( double left_X, double left_Y, double RotationChange )
     {
-        power_Motor_FLBR = left_Y - left_X;
-        power_Motor_FRBL = left_Y + left_X;
+        power_Motor_FLBR = left_Y + left_X;
+        power_Motor_FRBL = left_Y - left_X;
         power_Motor_LEFT = RotationChange;
         power_Motor_RIGHT = -RotationChange;
         setWheelsPower();
@@ -143,9 +138,9 @@ public class DriverTest extends LinearOpMode {
     //aplica rotilor puterea
     private void setWheelsPower()
     {
-        Motor_FL.setPower(power_Motor_FLBR + power_Motor_LEFT);
-        Motor_FR.setPower(power_Motor_FRBL + power_Motor_RIGHT);
-        Motor_BL.setPower(power_Motor_FRBL + power_Motor_LEFT);
-        Motor_BR.setPower(power_Motor_FLBR + power_Motor_RIGHT);
+        Motor_FL.setPower(Range.clip(power_Motor_FLBR - power_Motor_LEFT, -1, 1));
+        Motor_FR.setPower(Range.clip(power_Motor_FRBL + power_Motor_RIGHT, -1, 1));
+        Motor_BL.setPower(Range.clip(power_Motor_FRBL + power_Motor_LEFT, -1, 1));
+        Motor_BR.setPower(Range.clip(power_Motor_FRBL + power_Motor_RIGHT, -1, 1));
     }
 }
