@@ -1,9 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsAnalogOpticalDistanceSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorMRRangeSensor;
 
 public abstract class AutonomieMain extends LinearOpMode {
     //motoare
@@ -11,6 +17,12 @@ public abstract class AutonomieMain extends LinearOpMode {
     protected DcMotor Motor_FR = null;
     protected DcMotor Motor_BL = null;
     protected DcMotor Motor_BR = null;
+
+    //motoare mecanisme
+    private DcMotor Motor_Glisiera_Fata = null;
+    private DcMotor Motor_Glisiera_Ridicat = null;
+    private DcMotor Motor_Rotire_Glisiera_Fata = null;
+    private DcMotor Motor_Captare = null;
 
     //constante
     protected static final int TICS_PER_CM = 67;
@@ -21,6 +33,12 @@ public abstract class AutonomieMain extends LinearOpMode {
     protected static double power_Motor_LEFT = 0;
     protected static double power_Motor_RIGHT = 0;
 
+    //senzori
+    protected OpticalDistanceSensor ODS1 = null;
+    protected ModernRoboticsAnalogOpticalDistanceSensor ODS2 = null;
+    protected ModernRoboticsI2cRangeSensor Range1 = null;
+    protected ModernRoboticsI2cRangeSensor Range2 = null;
+    protected GyroSensor gyro = null;
 
     enum DIRECTION{
         FORWARD,
@@ -45,6 +63,10 @@ public abstract class AutonomieMain extends LinearOpMode {
         Motor_FL.setDirection(DcMotorSimple.Direction.REVERSE);
         Motor_BR.setDirection(DcMotorSimple.Direction.REVERSE);
         Motor_FR.setDirection(DcMotorSimple.Direction.REVERSE);
+        Motor_Captare.setDirection(DcMotorSimple.Direction.REVERSE);
+        Motor_Glisiera_Fata.setDirection(DcMotorSimple.Direction.REVERSE);
+        Motor_Glisiera_Ridicat.setDirection(DcMotorSimple.Direction.FORWARD);
+        Motor_Rotire_Glisiera_Fata.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         //setare mod
@@ -58,6 +80,10 @@ public abstract class AutonomieMain extends LinearOpMode {
         Motor_FR.setPower(0);
         Motor_BR.setPower(0);
         Motor_BL.setPower(0);
+        Motor_Captare.setPower(0);
+        Motor_Glisiera_Ridicat.setPower(0);
+        Motor_Glisiera_Fata.setPower(0);
+        Motor_Rotire_Glisiera_Fata.setPower(0);
     }
 
     protected void setMotorsDirectionFLBR(DIRECTION dir, double speed){
@@ -93,6 +119,13 @@ public abstract class AutonomieMain extends LinearOpMode {
         Motor_FR.setPower(FRBL);
         Motor_BL.setPower(FRBL);
 
+    }
+
+    protected void setMotorsPowersRotate(double Left, double Right){
+        Motor_BL.setPower(Left);
+        Motor_FL.setPower(Left);
+        Motor_BR.setPower(Right);
+        Motor_FR.setPower(Right);
     }
 
     protected void stopMotors(){

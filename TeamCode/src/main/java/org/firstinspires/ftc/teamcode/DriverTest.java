@@ -13,12 +13,17 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @TeleOp (name = "Driver_Test", group = "Driver")
 
 public class DriverTest extends LinearOpMode {
-    //motoare
+    //motoare roti
     private DcMotor Motor_FL = null;
     private DcMotor Motor_FR = null;
     private DcMotor Motor_BL = null;
     private DcMotor Motor_BR = null;
 
+    //motoare mecanisme
+    private DcMotor Motor_Glisiera_Fata = null;
+    private DcMotor Motor_Glisiera_Ridicat = null;
+    private DcMotor Motor_Rotire_Glisiera_Fata = null;
+    private DcMotor Motor_Captare = null;
 
     //constante
     static final int TICS_PER_CM = 67;
@@ -46,7 +51,30 @@ public class DriverTest extends LinearOpMode {
                 calculateWheelsPower(0,0,0);
 
 
+            if(gamepad1.right_trigger > deadzone){
+                Motor_Rotire_Glisiera_Fata.setPower(0.3*gamepad1.right_trigger);
+            }else if(gamepad1.left_trigger > deadzone){
+                Motor_Rotire_Glisiera_Fata.setPower(-0.3*gamepad1.right_trigger);
+            }else{
+                Motor_Rotire_Glisiera_Fata.setPower(0);
+            }
+
             //gamepad 2
+            if ( Math.abs(gamepad2.left_stick_y) > deadzone)
+                Motor_Glisiera_Fata.setPower(gamepad2.left_stick_y);
+            else
+                Motor_Glisiera_Fata.setPower(0);
+
+            if ( Math.abs(gamepad2.right_stick_y) > deadzone)
+                Motor_Glisiera_Ridicat.setPower(gamepad2.right_stick_y);
+            else
+                Motor_Glisiera_Ridicat.setPower(0);
+
+            if(gamepad2.a)
+                Motor_Captare.setPower(0.8);
+
+            if(gamepad2.b)
+                Motor_Captare.setPower(0);
 
             telemetry.addData("Left X", gamepad1.left_stick_x);
             telemetry.addData("Left Y", gamepad1.left_stick_y);
@@ -61,12 +89,18 @@ public class DriverTest extends LinearOpMode {
         Motor_FR = hardwareMap.dcMotor.get("Motor_FR");
         Motor_BL = hardwareMap.dcMotor.get("Motor_BL");
         Motor_BR = hardwareMap.dcMotor.get("Motor_BR");
+        //TODO: mapare si motoare mecanisme
+
 
         //setare directii
         Motor_BL.setDirection(DcMotorSimple.Direction.FORWARD);
         Motor_FL.setDirection(DcMotorSimple.Direction.REVERSE);
         Motor_BR.setDirection(DcMotorSimple.Direction.REVERSE);
         Motor_FR.setDirection(DcMotorSimple.Direction.REVERSE);
+        Motor_Captare.setDirection(DcMotorSimple.Direction.REVERSE);
+        Motor_Glisiera_Fata.setDirection(DcMotorSimple.Direction.REVERSE);
+        Motor_Glisiera_Ridicat.setDirection(DcMotorSimple.Direction.FORWARD);
+        Motor_Rotire_Glisiera_Fata.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         //setare mod
@@ -74,12 +108,20 @@ public class DriverTest extends LinearOpMode {
         Motor_BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Motor_FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Motor_FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Motor_Captare.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Motor_Glisiera_Fata.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Motor_Glisiera_Ridicat.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Motor_Rotire_Glisiera_Fata.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //initializare putere
         Motor_FL.setPower(0);
         Motor_FR.setPower(0);
         Motor_BR.setPower(0);
         Motor_BL.setPower(0);
+        Motor_Captare.setPower(0);
+        Motor_Glisiera_Ridicat.setPower(0);
+        Motor_Glisiera_Fata.setPower(0);
+        Motor_Rotire_Glisiera_Fata.setPower(0);
 
     }
 
