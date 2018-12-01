@@ -14,17 +14,17 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @TeleOp (name = "Driver_Test", group = "Driver")
 
 public class DriverTest extends LinearOpMode {
-    //motoare
-    private DcMotor Motor_Glisiera = null;
+    //motoare roti
     private DcMotor Motor_FL = null;
     private DcMotor Motor_FR = null;
     private DcMotor Motor_BL = null;
     private DcMotor Motor_BR = null;
-    private DcMotor Motor_Ridicat = null;
 
-    //servo
-    private CRServo Servo_Palete_1 = null;
-    private CRServo Servo_Palete_2 = null;
+    //motoare mecanisme
+    private DcMotor Motor_Glisiera_Fata = null;
+    private DcMotor Motor_Glisiera_Ridicat = null;
+    private DcMotor Motor_Rotire_Glisiera_Fata = null;
+    private DcMotor Motor_Captare = null;
 
     //constante
     static final int TICS_PER_CM = 67;
@@ -52,41 +52,33 @@ public class DriverTest extends LinearOpMode {
                 calculateWheelsPower(0,0,0);
 
 
-            if(gamepad1.x){
-                Servo_Palete_1.setPower(0.8);
-                Servo_Palete_2.setPower(0.8);
-            }
-            if(gamepad1.y){
-                Servo_Palete_1.setPower(0.5);
-                Servo_Palete_2.setPower(0.5);
+            if(gamepad1.right_trigger > deadzone){
+                Motor_Rotire_Glisiera_Fata.setPower(0.3*gamepad1.right_trigger);
+            }else if(gamepad1.left_trigger > deadzone){
+                Motor_Rotire_Glisiera_Fata.setPower(-0.3*gamepad1.right_trigger);
+            }else{
+                Motor_Rotire_Glisiera_Fata.setPower(0);
             }
 
             //gamepad 2
+            if ( Math.abs(gamepad2.left_stick_y) > deadzone)
+                Motor_Glisiera_Fata.setPower(gamepad2.left_stick_y);
+            else
+                Motor_Glisiera_Fata.setPower(0);
 
-            if(gamepad2.a) {
-                Motor_Glisiera.setPower(0.7);
+            if ( Math.abs(gamepad2.right_stick_y) > deadzone)
+                Motor_Glisiera_Ridicat.setPower(gamepad2.right_stick_y);
+            else
+                Motor_Glisiera_Ridicat.setPower(0);
 
+            if(gamepad2.a)
+                Motor_Captare.setPower(0.8);
 
-            }else if(gamepad2.b) {
-                Motor_Glisiera.setPower(-0.7);
-
-            }else{
-                Motor_Glisiera.setPower(0);
-            }
-
-
-            if(gamepad2.left_trigger > deadzone){
-                Motor_Ridicat.setPower(Motor_Ridicat.getCurrentPosition() > -29.432*TICS_PER_CM ? gamepad2.left_trigger/3 : 0);
-            }else if(gamepad2.right_trigger > deadzone){
-                Motor_Ridicat.setPower(Motor_Ridicat.getCurrentPosition() < 0 ? -gamepad2.right_trigger/3 : 0);
-            }else{
-                Motor_Ridicat.setPower(0);
-            }
+            if(gamepad2.b)
+                Motor_Captare.setPower(0);
 
             telemetry.addData("Left X", gamepad1.left_stick_x);
             telemetry.addData("Left Y", gamepad1.left_stick_y);
-            telemetry.addData( "Motor_Glisiera: ", Motor_Glisiera.getCurrentPosition());
-            telemetry.addData("Motor Ridicat:", Motor_Ridicat.getCurrentPosition());
             telemetry.update();
         }
     }
@@ -98,36 +90,39 @@ public class DriverTest extends LinearOpMode {
         Motor_FR = hardwareMap.dcMotor.get("Motor_FR");
         Motor_BL = hardwareMap.dcMotor.get("Motor_BL");
         Motor_BR = hardwareMap.dcMotor.get("Motor_BR");
-        Motor_Glisiera = hardwareMap.dcMotor.get("Motor_Glisiera");
-        Motor_Ridicat = hardwareMap.dcMotor.get("Motor_Ridicat");
-        Servo_Palete_1 = hardwareMap.crservo.get("Servo_1");
-        Servo_Palete_2 = hardwareMap.crservo.get("Servo_2");
+        //TODO: mapare si motoare mecanisme
+
 
         //setare directii
-        Motor_Glisiera.setDirection(DcMotorSimple.Direction.FORWARD);
         Motor_BL.setDirection(DcMotorSimple.Direction.FORWARD);
         Motor_FL.setDirection(DcMotorSimple.Direction.REVERSE);
         Motor_BR.setDirection(DcMotorSimple.Direction.REVERSE);
         Motor_FR.setDirection(DcMotorSimple.Direction.REVERSE);
-        Motor_Ridicat.setDirection(DcMotorSimple.Direction.FORWARD);
-        Servo_Palete_1.setDirection(DcMotorSimple.Direction.FORWARD);
-        Servo_Palete_2.setDirection(DcMotorSimple.Direction.REVERSE);
+        Motor_Captare.setDirection(DcMotorSimple.Direction.REVERSE);
+        Motor_Glisiera_Fata.setDirection(DcMotorSimple.Direction.REVERSE);
+        Motor_Glisiera_Ridicat.setDirection(DcMotorSimple.Direction.FORWARD);
+        Motor_Rotire_Glisiera_Fata.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         //setare mod
         Motor_BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Motor_BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Motor_FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Motor_FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Motor_Glisiera.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Motor_Ridicat.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Motor_Captare.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Motor_Glisiera_Fata.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Motor_Glisiera_Ridicat.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Motor_Rotire_Glisiera_Fata.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //initializare putere
         Motor_FL.setPower(0);
         Motor_FR.setPower(0);
         Motor_BR.setPower(0);
         Motor_BL.setPower(0);
-        Motor_Ridicat.setPower(0);
-        Motor_Glisiera.setPower(0);
+        Motor_Captare.setPower(0);
+        Motor_Glisiera_Ridicat.setPower(0);
+        Motor_Glisiera_Fata.setPower(0);
+        Motor_Rotire_Glisiera_Fata.setPower(0);
 
     }
 
@@ -144,7 +139,7 @@ public class DriverTest extends LinearOpMode {
     //aplica rotilor puterea
     private void setWheelsPower()
     {
-        Motor_FL.setPower(power_Motor_FLBR + power_Motor_LEFT);
+        Motor_FL.setPower(power_Motor_FLBR - power_Motor_LEFT);
         Motor_FR.setPower(power_Motor_FRBL + power_Motor_RIGHT);
         Motor_BL.setPower(power_Motor_FRBL + power_Motor_LEFT);
         Motor_BR.setPower(power_Motor_FLBR + power_Motor_RIGHT);
